@@ -12,8 +12,11 @@
 		"default_title": "CEDC",
 		"default_popup": "popup.html"
 	},
-	"background":	{
-		"scripts": "decrypt.js"
-	},
+	"content_scripts":	[
+		{
+			"matches": ["http://*/*", "https://*/*"],
+			"js": ["decrypt.js"]
+		}
+	],
 	"options_page": "options.html"
 }
