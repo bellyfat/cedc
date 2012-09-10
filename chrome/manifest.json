@@ -15,7 +15,7 @@
 	"content_scripts":	[
 		{
 			"matches": ["http://*/*", "https://*/*"],
-			"js": ["decrypt.js"]
+			"js": ["js/decrypt.js"]
 		}
 	],
 	"options_page": "options.html"

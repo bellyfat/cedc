@@ -40,7 +40,7 @@ function restore_options() {
 //Generate a random key, put it in the input
 function generate_key()
 {
-	$("#key").val(CryptoJS.lib.WordArray.random(1).toString());
+	$("#key").val(CryptoJS.AES.encrypt("test", "hi"));
 }
 
 

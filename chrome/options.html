@@ -2,21 +2,31 @@
 	<head>
 		<title>CEDC Options</title>
 
-<script src="options.js"></script>
-<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/aes.js"></script>
-
+		<script src="js/jquery/jquery-1.8.1.min.js"></script>
+		<script src="js/cjs3/rollups/aes.js"></script>
+		<script src="js/options.js"></script>
 	</head>
 	<body>
-		Favorite Color:
-		<select id="color">
-		 <option value="red">red</option>
-		 <option value="green">green</option>
-		 <option value="blue">blue</option>
-		 <option value="yellow">yellow</option>
-		</select>
+		<div>
+			<h3>Generate key</h3>
+			<span>Keys allow others to view your encrypted content.  Create as many as you want to have "groups" that can see things.</span><br /><br />
+			<span>Key:</span>&nbsp;&nbsp;<input type="text" id="key" style="width:500px;" /><br />
+			<button id="genkey">Generate random key</button>
+		</div>
+		<div>
+			<h3>Saved keys to use to encrypt</h3>
+			<span>Place a key generated above here to encrypt content.  Remember that email and text messages, unless you both own the server and send it via HTTPS, are readable by corporations.  General rule of thumb is don't give keys over facebook chat, gmail, text message unless you are just trying to prevent coworkers or family members from reading your content.</span><br /><br />
+			<div id="saved_keys_encrypt"></div>
+			<span>Key:</span>&nbsp;&nbsp;<input type="text" style="width:500px;" id="key_to_save_encrypt" /><br />
+			<button id="save_key_encrypt">Save Key</button><button id="delete_key_encrypt">Delete Selected Keys</button>
+		</div>
+		<div>
+			<h3>Saved keys to use to decrypt</h3>
+			<span>Place keys given to you by your friends here to see their content.</span><br /><br />
+			<div id="saved_keys_decrypt"></div>
+			<span>Key:</span>&nbsp;&nbsp;<input type="text" style="width:500px;" id="key_to_save_decrypt" /><br />
+			<button id="save_key_encrypt">Save Key</button><button id="delete_key_decrypt">Delete Selected Keys</button>
 
-		<br>
-		<button id="save">Save</button>
-		<br><br><span id="status"></span>
+		</div>
 	</body>
 </html>
