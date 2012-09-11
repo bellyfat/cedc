@@ -1,4 +1,28 @@
 <html>
-	<head></head>
-	<body></body>
+	<head>
+		<script src="js/jquery/jquery-1.8.1.min.js"></script>
+		<script src="js/cjs3/rollups/aes.js"></script>
+		<script src="js/popup.js"></script>
+	</head>
+	<body>
+		<h3>Encrypt Content</h3>
+		<div>
+			<div id="key_select_div"></div>
+		</div>
+		<div>
+			<span>Text to encrypt</span>
+			<textarea id="text_to_encrypt" rows="5" cols="50"></textarea>
+			<button id="encrypt_text">Encrypt Text</button>
+		</div><br />
+		<div>
+			<span>Picture to encrypt</span>
+			<span id="status"></span>
+			<div id="picture_encrypt_div"><b>Drag and Drop a picture here to encrypt</b><div id="img_encrypt"></div></div>
+			<button id="encrypt_pic">Encrypt Picture</button>
+		</div><br />
+		<div>
+			<span>Encrypted Content (Post this)</span>
+			<textarea id="encrypted" readonly="readonly" rows="5" cols="50"></textarea>
+		</div>
+	</body>
 </html>
