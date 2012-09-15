@@ -49,9 +49,10 @@ function encrypt_text()
         }
 
 	var key = $("select#saved_keys").val();
-	var s = arr[key].split("::");
+//	var s = arr[key].split("::");
 
-	$("textarea#encrypted").val(CryptoJS.AES.encrypt($("textarea#text_to_encrypt").val(), arr[key]) + "::" + s[1]);
+	$("textarea#encrypted").val(CryptoJS.AES.encrypt($("textarea#text_to_encrypt").val(), arr[key]));
+// + "::" + s[1]);
 }
 
 function encrypt_pic()
@@ -69,9 +70,10 @@ function encrypt_pic()
         }
 
         var key = $("select#saved_keys").val();
-        var s = arr[key].split("::");
+//        var s = arr[key].split("::");
 
-	$("textarea#encrypted").val(CryptoJS.AES.encrypt($("div#img_encrypt").html(), arr[key]) + "::" + s[1]);
+	$("textarea#encrypted").val(CryptoJS.AES.encrypt($("div#img_encrypt").html(), arr[key]));
+// + "::" + s[1]);
 }
 
 function noopHandler(evt)
@@ -109,6 +111,10 @@ function drop(evt)
 	evt.preventDefault(); 
 }
 
+function select_encrypted()
+{
+        $("textarea#encrypted").focus().select();
+}
 
 
 
@@ -120,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelector('button#encrypt_text').addEventListener('click', encrypt_text);
 	document.querySelector('button#encrypt_pic').addEventListener('click', encrypt_pic);
 	document.querySelector('div#picture_encrypt_div').addEventListener('drop', drop);
+	document.querySelector('textarea#encrypted').addEventListener('click', select_encrypted);
 	document.querySelector('div#picture_encrypt_div').addEventListener('dragenter', noopHandler);
 	document.querySelector('div#picture_encrypt_div').addEventListener('dragexit', noopHandler);
 	document.querySelector('div#picture_encrypt_div').addEventListener('dragover', noopHandler);
