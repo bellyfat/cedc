@@ -49,10 +49,8 @@ function encrypt_text()
         }
 
 	var key = $("select#saved_keys").val();
-//	var s = arr[key].split("::");
 
-	$("textarea#encrypted").val(CryptoJS.AES.encrypt($("textarea#text_to_encrypt").val(), arr[key]));
-// + "::" + s[1]);
+	$("textarea#encrypted").val("[cedcb]" + CryptoJS.AES.encrypt($("textarea#text_to_encrypt").val(), arr[key]) + "[cedce]");
 }
 
 function encrypt_pic()
@@ -70,10 +68,8 @@ function encrypt_pic()
         }
 
         var key = $("select#saved_keys").val();
-//        var s = arr[key].split("::");
 
-	$("textarea#encrypted").val(CryptoJS.AES.encrypt($("div#img_encrypt").html(), arr[key]));
-// + "::" + s[1]);
+	$("textarea#encrypted").val("[cedcb]" + CryptoJS.AES.encrypt($("div#img_encrypt").html(), arr[key]) + "[cedce]");
 }
 
 function noopHandler(evt)

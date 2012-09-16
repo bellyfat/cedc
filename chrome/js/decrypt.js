@@ -6,6 +6,14 @@ Object.size = function(obj) {
         return size;
 };
 
+function strip(html)
+{
+	var tmp = document.createElement("DIV");
+	tmp.innerHTML = html;
+
+	return tmp.textContent||tmp.innerText;
+}
+
 chrome.extension.sendRequest({method: "getDecryptKeys"}, function(response) {
 	var locals = response.saved_decrypt_keys;
 		
@@ -21,8 +29,29 @@ chrome.extension.sendRequest({method: "getDecryptKeys"}, function(response) {
 		return;
 	}
 
-	for(var key in arr)
+	var b = $("body").html();
+	var reg = /\[cedcb\]([\s\S]*?)\[cedce\]/g;
+
+	if(reg.test(b))
 	{
-		console.log(CryptoJS.lib.WordArray.random(256).toString(CryptoJS.enc.Base64));
+		while(b.match(reg))
+		{
+			b = b.replace(reg, function(mat)	{
+				for(var key in arr)
+				{
+					var dec = CryptoJS.AES.decrypt(strip(RegExp.$1), arr[key]).toString(CryptoJS.enc.Utf8);
+
+					if(dec != "")
+					{
+						return dec;
+					}
+				}
+				
+				return "";
+			});
+		}
+
+		$("body").html(b);
 	}
+
 });
