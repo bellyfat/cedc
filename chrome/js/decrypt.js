@@ -1,3 +1,6 @@
+var arr;
+var reg;
+
 Object.size = function(obj) {
         var size = 0, key;
         for (key in obj) {
@@ -14,23 +17,36 @@ function strip(html)
 	return tmp.textContent||tmp.innerText;
 }
 
-chrome.extension.sendRequest({method: "getDecryptKeys"}, function(response) {
-	var locals = response.saved_decrypt_keys;
-		
-	if(locals == null)
+//websites like facebook/twitter shouldn't have while loops.
+//so facebook adds brackets in the html which destroys our regex.  we need this crazy regex because they can add garbage in our identifier. so.... strip everything.
+function richwebsites()
+{
+	var b = strip($(this).html());
+
+	if(reg.test(b))
 	{
-		return;
+		b = b.replace(reg, function(mat)        {
+			for(var key in arr)
+			{
+				var dec = CryptoJS.AES.decrypt(RegExp.$1.replace(/\.*/g, ''), arr[key]).toString(CryptoJS.enc.Utf8);
+
+				if(dec != "")
+				{
+					return dec;
+				}
+			}
+
+			return mat;
+		});
+
+		$(this).html(b);
 	}
 
-	var arr = JSON.parse(locals);
+}
 
-	if(Object.size(arr) == 0)
-	{
-		return;
-	}
-
+function everyoneelse()
+{
 	var b = $("body").html();
-	var reg = /\[cedcb\]([\s\S]*?)\[cedce\]/g;
 
 	if(reg.test(b))
 	{
@@ -39,7 +55,7 @@ chrome.extension.sendRequest({method: "getDecryptKeys"}, function(response) {
 			b = b.replace(reg, function(mat)	{
 				for(var key in arr)
 				{
-					var dec = CryptoJS.AES.decrypt(strip(RegExp.$1), arr[key]).toString(CryptoJS.enc.Utf8);
+					var dec = CryptoJS.AES.decrypt(strip(RegExp.$1).replace(/\.*/g, ''), arr[key]).toString(CryptoJS.enc.Utf8);
 
 					if(dec != "")
 					{
@@ -47,11 +63,54 @@ chrome.extension.sendRequest({method: "getDecryptKeys"}, function(response) {
 					}
 				}
 				
-				return "";
+				return mat;
 			});
 		}
 
 		$("body").html(b);
 	}
+}
 
-});
+function doit()
+{
+	chrome.extension.sendRequest({method: "getDecryptKeys"}, function(response) {
+		var locals = response.saved_decrypt_keys;
+			
+		if(locals == null)
+		{
+			return;
+		}
+
+		arr = JSON.parse(locals);
+
+		if(Object.size(arr) == 0)
+		{
+			return;
+		}
+
+		if(location.hostname.match('facebook')) {
+			reg = /\[[\s\S]*?c[\s\S]*?e[\s\S]*?d[\s\S]*?c[\s\S]*?b[\s\S]*?\]([\s\S]*?)\[[\s\S]*?c[\s\S]*?e[\s\S]*?d[\s\S]*?c[\s\S]*?e[\s\S]*?\]/gi;
+		}
+		else	{
+			reg = /\[cedcb\]([\s\S]*?)\[cedce\]/gi;
+		}
+
+		if(location.hostname.match('facebook'))	{
+			//fucking facebook destroys our message and is so massive we are too slow
+			$('span.userContent').each(richwebsites);
+			$('span.UFICommentBody').each(richwebsites);
+		}
+		else if(location.hostname.match('twitter'))	{
+			$('p.js-tweet-text').each(richwebsites);	
+		}
+		else
+		{
+			everyoneelse();
+		}
+	});
+}
+
+doit();
+
+//to handle ajaxy applications
+setInterval(doit, 1000);

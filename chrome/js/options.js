@@ -9,7 +9,7 @@ Object.size = function(obj) {
 //Generate a random key, put it in the input
 function generate_key()
 {
-	$("#key").val(CryptoJS.lib.WordArray.random(256).toString(CryptoJS.enc.Base64));
+	$("#key").val(CryptoJS.lib.WordArray.random(256));
 }
 
 function select_key()
