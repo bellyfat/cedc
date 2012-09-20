@@ -99,6 +99,7 @@ function doit()
 			//fucking facebook destroys our message and is so massive we are too slow
 			$('span.userContent').each(richwebsites);
 			$('span.UFICommentBody').each(richwebsites);
+			$('div.content').each(richwebsites);
 		}
 		else if(location.hostname.match('twitter'))	{
 			$('p.js-tweet-text').each(richwebsites);	
