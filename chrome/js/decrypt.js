@@ -75,13 +75,13 @@ function doit()
 {
 	chrome.extension.sendRequest({method: "getDecryptKeys"}, function(response) {
 		var locals = response.saved_decrypt_keys;
-			
+
 		if(locals == null)
 		{
 			return;
 		}
 
-		arr = JSON.parse(locals);
+		arr = locals;
 
 		if(Object.size(arr) == 0)
 		{
@@ -100,6 +100,7 @@ function doit()
 			$('span.userContent').each(richwebsites);
 			$('span.UFICommentBody').each(richwebsites);
 			$('div.content').each(richwebsites);
+			$('div.fbChatMessage').each(richwebsites);
 		}
 		else if(location.hostname.match('twitter'))	{
 			$('p.js-tweet-text').each(richwebsites);	
