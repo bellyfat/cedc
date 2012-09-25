@@ -10,6 +10,8 @@ function populateSelectKey()
 {
 	if(localStorage["saved_encrypt_keys"] == null)
         {
+		$("div#key_select_div").html("<b>No keys saved!  Create some in the Options menu of the extensions page.</b><br /><br />");
+
                 return;
         }
 
@@ -17,7 +19,7 @@ function populateSelectKey()
 
 	if(Object.size(arr) == 0)
         {
-                $("div#key_select_div").html("<b>No keys saved!</b><br /><br />");
+                $("div#key_select_div").html("<b>No keys saved!  Create some in the Options menu of the extensions page.</b><br /><br />");
 
                 return;
         }
