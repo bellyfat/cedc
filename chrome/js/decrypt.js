@@ -63,7 +63,7 @@ function everyoneelse()
 					}
 				}
 				
-				return mat;
+				return RegExp.$1;
 			});
 		}
 

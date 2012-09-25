@@ -1,6 +1,6 @@
 {
 	"name": "CEDC",
-	"version": "1.0",
+	"version": "1.1",
 	"manifest_version": 2,
 	"description": "Clientside Encryption and Decryption of Content (CEDC) allows a user to confidently post potentially speculative content to social media sites, give keys to friends, and know that only they can view this content.  There is seemless decryption of pictures and text which does not ruin the user experience for those with the keys.  Those without the keys will only see gibberish, and since it's clientside in the plugin you know your keys are safe.  Just be careful how you distribute the keys.",
 	"icons": { "16": "icon.png",
