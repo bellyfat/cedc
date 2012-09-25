@@ -5,10 +5,10 @@
 		<script src="js/popup.js"></script>
 	</head>
 	<body>
-		<h3>Encrypt Content</h3>
 		<div>
 			<div id="key_select_div"></div>
 		</div>
+		<h3>Encrypt Content</h3>
 		<div>
 			<div>
 				<span>Text to encrypt</span>
@@ -32,5 +32,15 @@
 				<textarea id="encrypted" readonly="readonly" style="white-space: nowrap;" rows="5" cols="50"></textarea>
 			</div>
 		</div>
+		<h3>Decrypt Content</h3>
+		<div>
+			<span>Got some content that isn't decrpyting on the site, and you want to view it (if you have the key)?  Paste it here and submit "Decrypt"</span>
+			<div>
+                                <textarea id="text_to_decrypt" rows="5" cols="50"></textarea>
+                        </div>
+                        <button id="decrypt">Decrypt</button>
+			<br />
+			<div id="decrypted"></div>
+                </div>
 	</body>
 </html>

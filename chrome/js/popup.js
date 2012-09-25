@@ -112,8 +112,28 @@ function select_encrypted()
         $("textarea#encrypted").focus().select();
 }
 
+function decrypt()
+{
+	if(localStorage["saved_encrypt_keys"] == null || $("textarea#text_to_decrypt").val() == "")
+        {
+                return;
+        }
 
+        var arr = JSON.parse(localStorage["saved_encrypt_keys"]);
 
+        if(Object.size(arr) == 0)
+        {
+                return;
+        }
+
+	var key = $("select#saved_keys").val();
+	var reg = /\[cedcb\]([\s\S]*?)\[cedce\]/gi;
+	var b = $("textarea#text_to_decrypt").val().replace(reg, function(mat)	{
+		return CryptoJS.AES.decrypt(RegExp.$1.replace(/\.*/g, ''), arr[key]).toString(CryptoJS.enc.Utf8);
+	});
+
+	$("div#decrypted").html(b);
+}
 
 
 //Add listeners
@@ -121,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	populateSelectKey();
 	document.querySelector('button#encrypt_text').addEventListener('click', encrypt_text);
 	document.querySelector('button#encrypt_pic').addEventListener('click', encrypt_pic);
+	document.querySelector('button#decrypt').addEventListener('click', decrypt);
 	document.querySelector('div#picture_encrypt_div').addEventListener('drop', drop);
 	document.querySelector('textarea#encrypted').addEventListener('click', select_encrypted);
 	document.querySelector('div#picture_encrypt_div').addEventListener('dragenter', noopHandler);
