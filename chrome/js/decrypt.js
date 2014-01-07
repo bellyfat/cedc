@@ -1,3 +1,21 @@
+/**
+Set up backwards compatibility
+*/
+if (!chrome.runtime) {
+    // Chrome 20-21
+    chrome.runtime = chrome.extension;
+} else if(!chrome.runtime.onMessage) {
+    // Chrome 22-25
+    chrome.runtime.onMessage = chrome.extension.onMessage;
+    chrome.runtime.sendMessage = chrome.extension.sendMessage;
+    chrome.runtime.onConnect = chrome.extension.onConnect;
+    chrome.runtime.connect = chrome.extension.connect;
+}
+
+
+
+
+
 var arr;
 var reg;
 
@@ -73,42 +91,44 @@ function everyoneelse()
 
 function doit()
 {
-	chrome.extension.sendRequest({method: "getDecryptKeys"}, function(response) {
-		var locals = response.saved_decrypt_keys;
+	chrome.storage.local.get(["saved_encrypt_keys", "saved_decrypt_keys"], function(result) {
+		chrome.runtime.sendMessage({method: "getDecryptKeys", payload: result}, function(response) {
+			var locals = response.saved_decrypt_keys;
 
-		if(locals == null)
-		{
-			return;
-		}
+			if(locals == null)
+			{
+				return;
+			}
 
-		arr = locals;
+			arr = locals;
 
-		if(Object.size(arr) == 0)
-		{
-			return;
-		}
+			if(Object.size(arr) == 0)
+			{
+				return;
+			}
 
-		if(location.hostname.match('facebook')) {
-			reg = /\[[\s\S]*?c[\s\S]*?e[\s\S]*?d[\s\S]*?c[\s\S]*?b[\s\S]*?\]([\s\S]*?)\[[\s\S]*?c[\s\S]*?e[\s\S]*?d[\s\S]*?c[\s\S]*?e[\s\S]*?\]/gi;
-		}
-		else	{
-			reg = /\[cedcb\]([\s\S]*?)\[cedce\]/gi;
-		}
+			if(location.hostname.match('facebook')) {
+				reg = /\[[\s\S]*?c[\s\S]*?e[\s\S]*?d[\s\S]*?c[\s\S]*?b[\s\S]*?\]([\s\S]*?)\[[\s\S]*?c[\s\S]*?e[\s\S]*?d[\s\S]*?c[\s\S]*?e[\s\S]*?\]/gi;
+			}
+			else	{
+				reg = /\[cedcb\]([\s\S]*?)\[cedce\]/gi;
+			}
 
-		if(location.hostname.match('facebook'))	{
-			//fucking facebook destroys our message and is so massive we are too slow
-			$('span.userContent').each(richwebsites);
-			$('span.UFICommentBody').each(richwebsites);
-			$('div.content').each(richwebsites);
-			$('div.fbChatMessage').each(richwebsites);
-		}
-		else if(location.hostname.match('twitter'))	{
-			$('p.js-tweet-text').each(richwebsites);	
-		}
-		else
-		{
-			everyoneelse();
-		}
+			if(location.hostname.match('facebook'))	{
+				//fucking facebook destroys our message and is so massive we are too slow
+				$('span.userContent').each(richwebsites);
+				$('span.UFICommentBody').each(richwebsites);
+				$('div.content').each(richwebsites);
+				$('div.fbChatMessage').each(richwebsites);
+			}
+			else if(location.hostname.match('twitter'))	{
+				$('p.js-tweet-text').each(richwebsites);
+			}
+			else
+			{
+				everyoneelse();
+			}
+		});
 	});
 }
 

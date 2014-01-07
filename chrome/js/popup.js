@@ -8,70 +8,59 @@ Object.size = function(obj) {
 
 function populateSelectKey()
 {
-	if(localStorage["saved_encrypt_keys"] == null)
-        {
-		$("div#key_select_div").html("<b>No keys saved!  Create some in the Options menu of the extensions page.</b><br /><br />");
+	chrome.storage.local.get("saved_encrypt_keys", function(result) {
+		var sek = result.saved_encrypt_keys;
 
-                return;
+		if(sek == null || Object.size(sek) == 0)
+        {
+			$("div#key_select_div").html("<b>No keys saved!  Create some in the Options menu of the extensions page.</b><br /><br />");
+
+            return;
         }
 
-        var arr = JSON.parse(localStorage["saved_encrypt_keys"]);
+		var output = "<span>Key to use:</span><br /><select id='saved_keys'>";
 
-	if(Object.size(arr) == 0)
-        {
-                $("div#key_select_div").html("<b>No keys saved!  Create some in the Options menu of the extensions page.</b><br /><br />");
+		for(var key in sek)
+		{
+			output = output + "<option value='" + key + "'>" + key + "</option>";
+		}
 
-                return;
-        }
+		output = output + "</select><br /><br />";
 
-	var output = "<span>Key to use:</span><br /><select id='saved_keys'>";
-
-	for(var key in arr)
-	{
-		output = output + "<option value='" + key + "'>" + key + "</option>";
-	}
-
-	output = output + "</select><br /><br />";
-
-	$("div#key_select_div").html(output);
+		$("div#key_select_div").html(output);
+	});
 }
 
 function encrypt_text()
 {
-        if(localStorage["saved_encrypt_keys"] == null || $("textarea#text_to_encrypt").val() == "")
+	chrome.storage.local.get("saved_encrypt_keys", function(result) {
+		var sek = result.saved_encrypt_keys;
+
+        if(sek == null || $("textarea#text_to_encrypt").val() == "" || Object.size(sek) == 0)
         {
-                return;
+            return;
         }
 
-        var arr = JSON.parse(localStorage["saved_encrypt_keys"]);
+		var key = $("select#saved_keys").val();
 
-        if(Object.size(arr) == 0)
-        {
-                return;
-        }
-
-	var key = $("select#saved_keys").val();
-
-	$("textarea#encrypted").val("[cedcb]" + CryptoJS.AES.encrypt($("textarea#text_to_encrypt").val(), arr[key]) + "[cedce]");
+		$("textarea#encrypted").val("[cedcb]" + CryptoJS.AES.encrypt($("textarea#text_to_encrypt").val(), sek[key]) + "[cedce]");
+	});
 }
 
 function encrypt_pic()
 {
-        if(localStorage["saved_encrypt_keys"] == null || $("div#img_encrypt").html() == "")
-        {
-                return;
-        }
+	chrome.storage.local.get("saved_encrypt_keys", function(result) {
+		var sek = result.saved_encrypt_keys;
 
-        var arr = JSON.parse(localStorage["saved_encrypt_keys"]);
-
-        if(Object.size(arr) == 0)
+        if(sek == null || $("div#img_encrypt").html() == "" || Object.size(sek) == 0)
         {
-                return;
+            return;
         }
 
         var key = $("select#saved_keys").val();
 
-	$("textarea#encrypted").val("[cedcb]" + CryptoJS.AES.encrypt($("div#img_encrypt").html(), arr[key]) + "[cedce]");
+		$("textarea#encrypted").val("[cedcb]" + CryptoJS.AES.encrypt($("div#img_encrypt").html(), sek[key]) + "[cedce]");
+	});
 }
 
 function noopHandler(evt)
@@ -111,30 +100,27 @@ function drop(evt)
 
 function select_encrypted()
 {
-        $("textarea#encrypted").focus().select();
+    $("textarea#encrypted").focus().select();
 }
 
 function decrypt()
 {
-	if(localStorage["saved_encrypt_keys"] == null || $("textarea#text_to_decrypt").val() == "")
+	chrome.storage.local.get("saved_encrypt_keys", function(result) {
+		var sek = result.saved_encrypt_keys;
+
+		if(sek == null || $("textarea#text_to_decrypt").val() == "" || Object.size(sek) == 0)
         {
-                return;
+            return;
         }
 
-        var arr = JSON.parse(localStorage["saved_encrypt_keys"]);
+		var key = $("select#saved_keys").val();
+		var reg = /\[cedcb\]([\s\S]*?)\[cedce\]/gi;
+		var b = $("textarea#text_to_decrypt").val().replace(reg, function(mat)	{
+			return CryptoJS.AES.decrypt(RegExp.$1.replace(/\.*/g, ''), sek[key]).toString(CryptoJS.enc.Utf8);
+		});
 
-        if(Object.size(arr) == 0)
-        {
-                return;
-        }
-
-	var key = $("select#saved_keys").val();
-	var reg = /\[cedcb\]([\s\S]*?)\[cedce\]/gi;
-	var b = $("textarea#text_to_decrypt").val().replace(reg, function(mat)	{
-		return CryptoJS.AES.decrypt(RegExp.$1.replace(/\.*/g, ''), arr[key]).toString(CryptoJS.enc.Utf8);
+		$("div#decrypted").html(b);
 	});
-
-	$("div#decrypted").html(b);
 }
 
 
