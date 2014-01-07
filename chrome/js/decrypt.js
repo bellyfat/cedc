@@ -116,10 +116,18 @@ function doit()
 
 			if(location.hostname.match('facebook'))	{
 				//fucking facebook destroys our message and is so massive we are too slow
+
+				//posts on walls
 				$('span.userContent').each(richwebsites);
-				$('span.UFICommentBody').each(richwebsites);
-				$('div.content').each(richwebsites);
-				$('div.fbChatMessage').each(richwebsites);
+
+				//replies to posts on walls
+				$('span[data-reactid]').each(richwebsites);
+
+				//messages on full message page
+				$('div[class] > span > p').each(richwebsites);
+
+				//messages in chat window
+				$('div[data-jsid] > span[data-measureme] > span').each(richwebsites);
 			}
 			else if(location.hostname.match('twitter'))	{
 				$('p.js-tweet-text').each(richwebsites);
