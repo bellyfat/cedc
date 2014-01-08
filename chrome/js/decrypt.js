@@ -40,13 +40,22 @@ function strip(html)
 function richwebsites()
 {
 	var b = strip($(this).html());
+	var dec = "";
 
 	if(reg.test(b))
 	{
 		b = b.replace(reg, function(mat)        {
 			for(var key in arr)
 			{
-				var dec = CryptoJS.AES.decrypt(RegExp.$1.replace(/\.*/g, ''), arr[key]).toString(CryptoJS.enc.Utf8);
+				dec = "";
+
+				try
+				{
+					dec = CryptoJS.AES.decrypt(RegExp.$1.replace(/\.*/g, ''), arr[key]).toString(CryptoJS.enc.Utf8);
+				}
+				catch(err)
+				{
+				}
 
 				if(dec != "")
 				{
@@ -65,6 +74,7 @@ function richwebsites()
 function everyoneelse()
 {
 	var b = $("body").html();
+	var dec = "";
 
 	if(reg.test(b))
 	{
@@ -73,7 +83,15 @@ function everyoneelse()
 			b = b.replace(reg, function(mat)	{
 				for(var key in arr)
 				{
-					var dec = CryptoJS.AES.decrypt(strip(RegExp.$1).replace(/\.*/g, ''), arr[key]).toString(CryptoJS.enc.Utf8);
+					dec = "";
+
+					try
+					{
+						dec = CryptoJS.AES.decrypt(strip(RegExp.$1).replace(/\.*/g, ''), arr[key]).toString(CryptoJS.enc.Utf8);
+					}
+					catch(error)
+					{
+					}
 
 					if(dec != "")
 					{
