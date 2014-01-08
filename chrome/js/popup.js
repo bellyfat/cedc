@@ -69,10 +69,9 @@ function noopHandler(evt)
 	evt.preventDefault();
 }
 
-function drop(evt)
+function upload_file(evt)
 {
-	
-	var files = evt.dataTransfer.files;
+	var files = evt.target.files;
 	var count = files.length;
 	 
 	// Only call the handler if 1 or more files was dropped.
@@ -130,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelector('button#encrypt_text').addEventListener('click', encrypt_text);
 	document.querySelector('button#encrypt_pic').addEventListener('click', encrypt_pic);
 	document.querySelector('button#decrypt').addEventListener('click', decrypt);
-	document.querySelector('div#picture_encrypt_div').addEventListener('drop', drop);
+	document.querySelector('input#files').addEventListener('change', upload_file);
 	document.querySelector('textarea#encrypted').addEventListener('click', select_encrypted);
 	document.querySelector('div#picture_encrypt_div').addEventListener('dragenter', noopHandler);
 	document.querySelector('div#picture_encrypt_div').addEventListener('dragexit', noopHandler);
